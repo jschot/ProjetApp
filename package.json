@@ -1,0 +1,15 @@
+{
+  "name": "player",
+  "version": "1.0.0",
+  "description": "Louvain Propre",
+  "scripts": {},
+  "author": "Groupe",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "consolidate": "^0.15.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "hogan": "^1.0.2"
+  }
+}
