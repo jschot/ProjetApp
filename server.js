@@ -96,15 +96,20 @@ MongoClient.connect(url, function(err, db){
 	
 	app.get('/firstpage', function(req, res) {
 		if(req.session.username){
-            res.render('Page1.html', {username:req.query.username, Date:getDate()})
+            res.render('Page1.html', {username:req.session.username, Date:getDate()})
         }
-        res.render('Page2.html');
+        res.render('Page2.html',{username:req.session.username});
 	})
 	app.get('/secpage', function(req, res) {
+		if(req.session.username){
+            res.render('Page1.html', {username:req.session.username, Date:getDate()})
+        }
+		else {
 		res.render('Page2.html');
+		}
 	})
 	app.get('/thirdpage', function(req, res) {
-		res.render('Page3.html');
+		res.render('Page3.html', {username:req.session.username});
 	})
 
     app.use(express.static('static'));
