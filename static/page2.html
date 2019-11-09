@@ -25,7 +25,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr colspan=2><td class="connection">{{tried}}</td></tr>
+				<tr><td class="connexion" colspan=2>{{tried}}</td></tr>
 				<tr>
 				<td><h4>Nom d'utilisateur</h4></td>
 				<td><input type="text" name="username" class="txt" placeholder="Nom d'utilisateur"></td>
@@ -39,11 +39,12 @@
 		</form>
 		</table>
 		<table class="sign" id="sign_in">
-		<form>
+		<form action=sign_in>
 			<thead>
 				<th colspan=2><h3>Nouveau compte</h3></th>
 			</thead>
 			<tbody>
+				<tr><td class="connexion" colspan=2>{{signError}}</td></tr>
 				<tr>
 					<td><h4>Nom d'utilisateur</h4></td>
 					<td><input type="text" name="username" class="txt" placeholder="Nom d'utilisateur"></td>

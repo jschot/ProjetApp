@@ -6,6 +6,12 @@ var MongoClient = require('mongodb').MongoClient
 var Server = require('mongodb').Server;
 var url = 'mongodb://localhost:27017'
 
+function getDate(){
+    var options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    var today = new Date();
+    var date =  today.toLocaleDateString("en-US", options);
+    return date;
+}
 
 MongoClient.connect(url, function(err, db){
     dbo = db.db("projetPrepa");
@@ -20,9 +26,6 @@ MongoClient.connect(url, function(err, db){
     })
 
     app.get('/log', function(req, res){
-        var options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        var today = new Date();
-        var date =  today.toLocaleDateString("en-US", options);
         var reqUsername = req.query.username;
         var reqPassword = req.query.password;
         
@@ -33,9 +36,32 @@ MongoClient.connect(url, function(err, db){
             console.log(result[0].password);
             console.log("-------------")
             if(pass == reqPassword){ //test if the password given by the user is good
-                res.render('Page1.html',{Date: date, username:reqUsername});
+                res.render('Page1.html',{Date:getDate(), username:reqUsername});
             }else{
                 res.render('Page2.html',{tried:"Mot de passe ou/et nom d'utilisateur incorrects"})
+            }
+        });
+    })
+
+    app.get('/sign_in', function(req, res){
+        var reqUsername = req.query.username;
+        var reqPassword = req.query.password;
+        dbo.collection("account").find({username:reqUsername}).toArray(function(err, result){
+            if(err) throw err;
+            if (result.length != 0){
+                //accout already exist
+                console.log("Try to create a new account with an username which is already taken:");
+                console.log(reqUsername);
+                console.log("-------------");
+                res.render('Page2.html',{signError:"Ce nom d'utilisateur existe déja"})
+            }else{
+                console.log(result);
+                var userAcc = {username: reqUsername, password: reqPassword, fullName: req.query.full_name};
+                dbo.collection("account").insertOne(userAcc, function(err, res) {
+                    if (err) throw err;
+                    console.log("added new user");
+                });
+                res.render('Page2.html');
             }
         });
     })
