@@ -1,5 +1,6 @@
 var express = require('express');
 var consolidate = require('consolidate');
+var session = require('express-session');
 var app = express ()
 //MangoDB connection 
 var MongoClient = require('mongodb').MongoClient
@@ -21,8 +22,31 @@ MongoClient.connect(url, function(err, db){
     app.engine ( 'html', consolidate.hogan )
     app.set('views', 'static');
 
+    app.use(session({
+        secret: "projetPrepa",
+        resave: false,
+        cookie: {
+            path: '/',
+            httpOnly: true,
+            maxAge: 3600000
+        }
+    }))
+
     app.get('/', function(req,res){
-        res.render('Page2.html');
+        sesUsername = req.session.username;
+        console.log("New connection");
+        console.log(sesUsername);
+        dbo.collection("account").find({username:sesUsername}).toArray(function(err, result){
+            if(err) throw err;
+            if (result.length != 0){
+                console.log("Already logged redirect to page1");
+                res.render('Page1.html', {username:sesUsername, Date:getDate()})
+            }
+            else{
+                console.log("not connected redirect to connection page");
+                res.render('Page2.html'); 
+            }
+        })
     })
 
     app.get('/log', function(req, res){
@@ -34,10 +58,14 @@ MongoClient.connect(url, function(err, db){
             var pass = result[0].password; //get the password from the DB
             console.log("Connection attempt with:")
             console.log(result[0].password);
-            console.log("-------------")
             if(pass == reqPassword){ //test if the password given by the user is good
+                req.session.username = reqUsername;
+                console.log("User connected with:")
+                console.log(req.session.username);
+                console.log("-------------")
                 res.render('Page1.html',{Date:getDate(), username:reqUsername});
             }else{
+                console.log("-------------")
                 res.render('Page2.html',{tried:"Mot de passe ou/et nom d'utilisateur incorrects"})
             }
         });
@@ -67,10 +95,10 @@ MongoClient.connect(url, function(err, db){
     })
 	
 	app.get('/firstpage', function(req, res) {
-		var options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        var today = new Date();
-		var date =  today.toLocaleDateString("en-US", options);
-		res.render('Page1.html',{Date: date});
+		if(req.session.username){
+            res.render('Page1.html', {username:req.query.username, Date:getDate()})
+        }
+        res.render('Page2.html');
 	})
 	app.get('/secpage', function(req, res) {
 		res.render('Page2.html');
