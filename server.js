@@ -109,8 +109,18 @@ MongoClient.connect(url, function(err, db){
 		}
 	})
 	app.get('/thirdpage', function(req, res) {
-		res.render('Page3.html', {username:req.session.username});
+        sesUsername = req.session.username;
+        dbo.collection("account").find({username:sesUsername}).toArray(function(err, result){
+            if(err) throw err;
+            if (result.length != 0){
+                res.render('Page3.html', {username:sesUsername});
+            }
+            else{
+                res.render('Page2.html'); 
+            }
+        })
 	})
+
 
     app.use(express.static('static'));
     app.listen(8080);
