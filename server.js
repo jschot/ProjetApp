@@ -16,7 +16,7 @@ MongoClient.connect(url, function(err, db){
     app.set('views', 'static');
 
     app.get('/', function(req,res){
-        res.render('Page2.html')
+        res.render('Page2.html');
     })
 
     app.get('/log', function(req, res){
@@ -39,6 +39,19 @@ MongoClient.connect(url, function(err, db){
             }
         });
     })
+	
+	app.get('/firstpage', function(req, res) {
+		var options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        var today = new Date();
+		var date =  today.toLocaleDateString("en-US", options);
+		res.render('Page1.html',{Date: date});
+	})
+	app.get('/secpage', function(req, res) {
+		res.render('Page2.html');
+	})
+	app.get('/thirdpage', function(req, res) {
+		res.render('Page3.html');
+	})
 
     app.use(express.static('static'));
     app.listen(8080);
