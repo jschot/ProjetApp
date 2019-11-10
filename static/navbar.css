@@ -94,3 +94,8 @@ li a:hover{
     background-color: #009933;
     border: 1px solid #004d1a;
 }
+
+.disconnect{
+    background-color: #009932;
+    height: 80%;
+}

@@ -85,12 +85,17 @@ MongoClient.connect(url, function(err, db){
                 res.render('Page2.html',{signError:"Ce nom d'utilisateur existe déja"})
             }else{
                 console.log(result);
-                var userAcc = {username: reqUsername, password: reqPassword, fullName: req.query.full_name};
-                dbo.collection("account").insertOne(userAcc, function(err, res) {
-                    if (err) throw err;
-                    console.log("added new user");
-                });
-                res.render('Page2.html');
+                if(reqUsername == "" || reqPassword == "" || req.query.full_name == "" || req.query.email == ""){
+                    res.render('Page2.html', {signError: "Veuillez remplir tous les champs"});
+                }
+                else{
+                    var userAcc = {username: reqUsername, password: reqPassword, fullName: req.query.full_name, email: req.query.email};
+                    dbo.collection("account").insertOne(userAcc, function(err, res) {
+                        if (err) throw err;
+                        console.log("added new user");
+                    });
+                    res.render('Page2.html');
+                }
             }
         });
     })
@@ -140,7 +145,12 @@ MongoClient.connect(url, function(err, db){
                 res.render('Page2.html');
             }
         })
-	})
+    })
+    
+    app.get('/disconnect', function(req, res){
+        req.session.username = "";
+        res.redirect('/');
+    })
 
     app.use(express.static('static'));
     app.listen(8080);
