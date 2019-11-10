@@ -2,7 +2,7 @@ var express = require('express');
 var consolidate = require('consolidate');
 var session = require('express-session');
 var app = express ()
-//MangoDB connection 
+//MangoDB connection
 var MongoClient = require('mongodb').MongoClient
 var Server = require('mongodb').Server;
 var url = 'mongodb://localhost:27017'
@@ -13,6 +13,7 @@ function getDate(){
     var date =  today.toLocaleDateString("en-US", options);
     return date;
 }
+
 
 MongoClient.connect(url, function(err, db){
     dbo = db.db("projetPrepa");
@@ -44,7 +45,7 @@ MongoClient.connect(url, function(err, db){
             }
             else{
                 console.log("not connected redirect to connection page");
-                res.render('Page2.html'); 
+                res.render('Page2.html');
             }
         })
     })
@@ -52,7 +53,7 @@ MongoClient.connect(url, function(err, db){
     app.get('/log', function(req, res){
         var reqUsername = req.query.username;
         var reqPassword = req.query.password;
-        
+
         dbo.collection("account").find({username:reqUsername}).toArray(function(err, result){ //finding in the DB the data for the username
             if(err) throw err;
             var pass = result[0].password; //get the password from the DB
@@ -93,16 +94,36 @@ MongoClient.connect(url, function(err, db){
             }
         });
     })
-	
+
+  app.get('/submit', function(req, res){
+    var descrip = req.query.description;
+    var adresse = req.query.adresse;
+    var sesUsername = req.session.username;
+    if (descrip == "" && adresse == ""){
+      res.render('Page3.html', {error1 : "ERROR : Veuilliez donner une description et une adresse SVP"});
+    }
+    if (descrip == ""){
+      res.render('Page3.html', {error1 : "ERROR : Veuilliez donner une descriptin du problème SVP"});
+    }
+    if (adresse == ""){
+      res.render('Page3.html', {error1 : "ERROR : Veuilliez donner une adresse SVP"});
+    }
+    else{
+      dbo.collection("accidents").insert({description : descrip ,Adresse : adresse, user : sesUsername, date : getDate()});
+      console.log ("added new accidents.");
+      res.render('Page3.html', {error1 : "Informations bien enregistrés !"});
+    }
+  })
+
 	app.get('/firstpage', function(req, res) {
 		if(req.session.username){
-            res.render('Page1.html', {username:req.session.username, Date:getDate()})
+            res.render('Page1.html', {username:req.session.username, Date:getDate()});
         }
         res.render('Page2.html',{username:req.session.username});
 	})
 	app.get('/secpage', function(req, res) {
 		if(req.session.username){
-            res.render('Page1.html', {username:req.session.username, Date:getDate()})
+            res.render('Page1.html', {username:req.session.username, Date:getDate()});
         }
 		else {
 		res.render('Page2.html');
@@ -116,11 +137,10 @@ MongoClient.connect(url, function(err, db){
                 res.render('Page3.html', {username:sesUsername});
             }
             else{
-                res.render('Page2.html'); 
+                res.render('Page2.html');
             }
         })
 	})
-
 
     app.use(express.static('static'));
     app.listen(8080);
