@@ -11,9 +11,11 @@
 <body>
 <nav class="navbar navbar-default" role="navigation">
 	<ul>
-	  <li><a class="active" href=#>Incident</a></li>
-	  <li><input class="search_bar" type="search" placeholder="Search" aria-label="Search">
-	  <button class="btn" type="submit">Search</button></li>
+	  <li><a class="active" href="\firstpage">Incident</a></li>
+	  <form action =search>
+	  <li><input class="search_bar" name="search" type="search" placeholder="Search" aria-label="Search">
+	  <input class="btn" type="submit" value="Search"></input></li>
+	  </form>
 	  <li class="pos"><a class="active" href="/disconnect">Se déconnecter</a></li>
 	  <li class="pos"><a class="active" href="\secpage">{{username}}</a></li>
 	</ul>
@@ -29,10 +31,10 @@
 				<td>Date</td>
 			</tr>
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td>{{Desc}}</td>
+				<td>{{Adr}}</td>
+				<td>{{Who}}</td>
+				<td>{{Datum}}</td>
 			</tr>
 			<tr>
 				<td></td>
@@ -80,4 +82,3 @@
 	</form>
 </body>
 </html>
-	
