@@ -11,7 +11,7 @@ var url = 'mongodb://localhost:27017'
 function getDate(){
     var options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     var today = new Date();
-    var date =  today.toLocaleDateString("en-US", options);
+    var date =  today.toLocaleDateString('en-US', options);
     return date;
 }
 
@@ -108,16 +108,16 @@ MongoClient.connect(url, function(err, db){
     if (descrip == "" && adresse == ""){
       res.render('Page3.html', {username: sesUsername, error1 : "ERROR : Veuilliez donner une description et une adresse SVP"});
     }
-    if (descrip == ""){
-      res.render('Page3.html', {username: sesUsername, error1 : "ERROR : Veuilliez donner une descriptin du problème SVP"});
+    else if (descrip == ""){
+      res.render('Page3.html', {username: sesUsername, error1 : "ERROR : Veuilliez donner une description du problème SVP"});
     }
-    if (adresse == ""){
+    else if (adresse == ""){
       res.render('Page3.html', {username: sesUsername, error1 : "ERROR : Veuilliez donner une adresse SVP"});
     }
     else{
       dbo.collection("accidents").insert({description : descrip ,Adresse : adresse, user : sesUsername, date : getDate()});
       console.log ("added new accidents.");
-      res.render('Page3.html', {username: sesUsername, error1 : "Informations bien enregistrés !"});
+      res.render('Page3.html', {username: sesUsername, error1 : "Informations bien enregistrées !"});
     }
   })
 
