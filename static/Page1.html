@@ -22,13 +22,13 @@
 </nav>
     <a href="\thirdpage"><h4>Lien pour ajouter un incident</h4></a>
     <h4>Jour actuel: <time>{{Date}}</time></h4>
-	<table>
-		<tr>
-			<td>Description</td>
-			<td>Adresse</td>
-			<td>Rapporté par</td>
-			<td>Date</td>
-		</tr>
+	<table class="accidents">
+		<thead>
+			<th>Description</th>
+			<th class="adresse">Adresse</th>
+			<th class="username">Rapporté par</th>
+			<th class="date">Date</th>
+		</thead>
 		{{{accidents}}}
 	</table>
 </body>

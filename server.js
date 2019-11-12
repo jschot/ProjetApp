@@ -116,7 +116,7 @@ MongoClient.connect(url, function(err, db){
     else{
       dbo.collection("accidents").insert({description : descrip ,Adresse : adresse, user : sesUsername, date : getDate()});
       console.log ("added new accidents.");
-      res.render('Page3.html', {username: sesUsername, error1 : "Informations bien enregistrés !"});
+      res.render('Page3.html', {error1 : "Informations bien enregistrés !"});
     }
   })
 
@@ -129,14 +129,14 @@ MongoClient.connect(url, function(err, db){
         dbo.collection("accidents").find(query).toArray(function(err, result){
             var table = "";
             for(var i=0;i<result.length;i++){
-                table += "<tr><td>" + result[i].description + "</td><td>" + result[i].Adresse + "</td><td>" + result[i].user + "</td><td>" + result[i].date + "</td></tr>"
+                table += "<tr><td>" + result[i].description + "</td><td class='adresse'>" + result[i].Adresse + "</td><td class='username'>" + result[i].user + "</td><td class='date'>" + result[i].date + "</td></tr>"
             }
             res.render('Page1.html', {username:req.session.username, Date:getDate(), accidents:table});
         })
         
     }
     else{
-        res.render('Page2.html',{username:req.session.username});
+        res.render('Page2.html',{username:req.session.username, tried:"Veuillez vous connecter"});
     }
     })
 

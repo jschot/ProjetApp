@@ -26,3 +26,25 @@ a:hover {
 a:active {
   color: blue;
 }
+
+.accidents{
+  table-layout: fixed;
+}
+
+.username{
+  width: 120px;
+  text-align: center;
+}
+
+.accidents td{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.date{
+  width: 250px; 
+}
+
+.adresse{
+  width: 250px;
+}
