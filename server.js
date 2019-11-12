@@ -1,3 +1,4 @@
+  
 var express = require('express');
 var consolidate = require('consolidate');
 var session = require('express-session');
@@ -116,7 +117,7 @@ MongoClient.connect(url, function(err, db){
     else{
       dbo.collection("accidents").insert({description : descrip ,Adresse : adresse, user : sesUsername, date : getDate()});
       console.log ("added new accidents.");
-      res.render('Page3.html', {error1 : "Informations bien enregistrés !"});
+      res.render('Page3.html', {username: sesUsername, error1 : "Informations bien enregistrés !"});
     }
   })
 
