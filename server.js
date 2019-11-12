@@ -41,7 +41,7 @@ MongoClient.connect(url, function(err, db){
             if(err) throw err;
             if (result.length != 0){
                 console.log("Already logged redirect to page1");
-                res.render('Page1.html', {username:sesUsername, Date:getDate()})
+                res.redirect('/firstpage');
             }
             else{
                 console.log("not connected redirect to connection page");
@@ -64,7 +64,7 @@ MongoClient.connect(url, function(err, db){
                 console.log("User connected with:")
                 console.log(req.session.username);
                 console.log("-------------")
-                res.render('Page1.html',{Date:getDate(), username:reqUsername});
+                res.redirect('/firstpage');
             }else{
                 console.log("-------------")
                 res.render('Page2.html',{tried:"Mot de passe ou/et nom d'utilisateur incorrects"})
@@ -72,30 +72,7 @@ MongoClient.connect(url, function(err, db){
         });
     })
 
-    app.get('/search', function(req, res){
-        if(req.session.username){
-            dbo.collection("accidents").find({description:req.query.search}).toArray(function(err, result){ 
-            if(err) throw err;
-            if (result.length == 0) {
-				console.log(result.length);
-				res.render('Page1.html',{Date:getDate(), username:req.session.username});
-			}
-			else {
-				var desc = result[0].description;
-				var adr = result[0].Adresse;
-				var who = result[0].user;
-				var dat = result[0].date;
-				res.render('Page1.html',{Date:getDate(), username:req.session.username, Desc:desc, Adr:adr, Who:who, Datum:dat});
-			}
-			});
-		}
-		else {
-			res.render('Page2.html');
-		}
-	})
-
-	
-	app.get('/sign_in', function(req, res){
+    app.get('/sign_in', function(req, res){
         var reqUsername = req.query.username;
         var reqPassword = req.query.password;
         dbo.collection("account").find({username:reqUsername}).toArray(function(err, result){
@@ -123,40 +100,55 @@ MongoClient.connect(url, function(err, db){
         });
     })
 
-	app.get('/submit', function(req, res){
-	var descrip = req.query.description;
-	var adresse = req.query.adresse;
-	var sesUsername = req.session.username;
-	if (descrip == "" && adresse == ""){
-	  res.render('Page3.html', {error1 : "ERROR : Veuilliez donner une description et une adresse SVP"});
-	}
-	if (descrip == ""){
-	  res.render('Page3.html', {error1 : "ERROR : Veuilliez donner une descriptin du problème SVP"});
-	}
-	if (adresse == ""){
-	  res.render('Page3.html', {error1 : "ERROR : Veuilliez donner une adresse SVP"});
-	}
-	else{
-	  dbo.collection("accidents").insert({description : descrip ,Adresse : adresse, user : sesUsername, date : getDate()});
-	  console.log ("added new accidents.");
-	  res.render('Page3.html', {error1 : "Informations bien enregistrés !"});
-	}
-	})
+  app.get('/submit', function(req, res){
+    var descrip = req.query.description;
+    var adresse = req.query.adresse;
+    var sesUsername = req.session.username;
+    if (descrip == "" && adresse == ""){
+      res.render('Page3.html', {error1 : "ERROR : Veuilliez donner une description et une adresse SVP"});
+    }
+    if (descrip == ""){
+      res.render('Page3.html', {error1 : "ERROR : Veuilliez donner une descriptin du problème SVP"});
+    }
+    if (adresse == ""){
+      res.render('Page3.html', {error1 : "ERROR : Veuilliez donner une adresse SVP"});
+    }
+    else{
+      dbo.collection("accidents").insert({description : descrip ,Adresse : adresse, user : sesUsername, date : getDate()});
+      console.log ("added new accidents.");
+      res.render('Page3.html', {error1 : "Informations bien enregistrés !"});
+    }
+  })
 
-	app.get('/firstpage', function(req, res) {
-		if(req.session.username){
-            res.render('Page1.html', {username:req.session.username, Date:getDate()});
+  app.get('/firstpage', function(req, res) {
+    if(req.session.username){
+        var query = {};
+        if(req.query.search != null){
+            query.description = req.query.search;
         }
+        dbo.collection("accidents").find(query).toArray(function(err, result){
+            var table = "";
+            for(var i=0;i<result.length;i++){
+                table += "<tr><td>" + result[i].description + "</td><td>" + result[i].adresse + "</td><td>" + result[i].user + "</td><td>" + result[i].date + "</td></tr>"
+            }
+            res.render('Page1.html', {username:req.session.username, Date:getDate(), accidents:table});
+        })
+        
+    }
+    else{
         res.render('Page2.html',{username:req.session.username});
-	})
-	app.get('/secpage', function(req, res) {
-		if(req.session.username){
-            res.render('Page1.html', {username:req.session.username, Date:getDate()});
+    }
+    })
+
+    app.get('/secpage', function(req, res) {
+        if(req.session.username){
+            res.redirect('/firstpage');
         }
-		else {
-			res.render('Page2.html');
-		}
-	})
+        else {
+        res.render('Page2.html');
+        }
+    })
+    
 	app.get('/thirdpage', function(req, res) {
         sesUsername = req.session.username;
         dbo.collection("account").find({username:sesUsername}).toArray(function(err, result){
