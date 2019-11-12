@@ -1,3 +1,4 @@
+  
 h4{
 	display:inline;
 	color: white;
@@ -60,7 +61,7 @@ input::placeholder{
 	color:white;
 }
 
-input[type="submit"]{
+section input[type="submit"]{
 	background-color: #4CAF50;
 	color: white;
 	border-radius: 15px;
@@ -69,13 +70,13 @@ input[type="submit"]{
 	border: none;
 }
 
-input[type="submit"]:hover{
+section input[type="submit"]:hover{
 	background-color: #005f20;
 	border: 1px solid #004d1a;
 	transition: background-color 0.3s;
 }
 
-input{
+section input{
 	text-align:center;
 }
 
