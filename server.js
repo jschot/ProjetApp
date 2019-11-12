@@ -129,7 +129,7 @@ MongoClient.connect(url, function(err, db){
         dbo.collection("accidents").find(query).toArray(function(err, result){
             var table = "";
             for(var i=0;i<result.length;i++){
-                table += "<tr><td>" + result[i].description + "</td><td>" + result[i].adresse + "</td><td>" + result[i].user + "</td><td>" + result[i].date + "</td></tr>"
+                table += "<tr><td>" + result[i].description + "</td><td>" + result[i].Adresse + "</td><td>" + result[i].user + "</td><td>" + result[i].date + "</td></tr>"
             }
             res.render('Page1.html', {username:req.session.username, Date:getDate(), accidents:table});
         })
